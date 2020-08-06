@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>the weather form</title>
+        <style>
+          #no {
+              font-weight: bold;
+              font-size: 48pt;
+              display: none;
+          }
+        </style>
+    </head>
+    <body>
+        <h1>the weather form</h1>
+        <p>What weather would you like?</p>
+        <div>
+        <select id="select">
+            <option value="" disabled selected>Please select...</option>
+            <option>Hot and sunny</option>
+            <option>Warm with a few clouds</option>
+            <option>Snowing</option>
+        </select>
+        </div>
+
+        <div id="no">NO!<br/>ONLY COLD AND RAINY FOR YOU!</div>
+    </body>
+    <script type="text/javascript">
+        const select = document.getElementById("select");
+        select.onchange = function() {
+            document.getElementById("no").style.display = "block";
+            window.setTimeout(function() {
+                window.location.reload();
+            }, 5000);
+        };
+    </script>
+</html>
