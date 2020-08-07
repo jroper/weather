@@ -1,35 +1,122 @@
 <html>
     <head>
         <title>the weather form</title>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <style>
+          @font-face {
+            font-family: "Lazy Spring Day";
+            src: url(lazy-spring-day.otf);
+          }
+          @font-face {
+            font-family: "Impacted";
+            src: url(impacted.ttf);
+          }
+          body {
+              margin 0;
+              padding 0;
+              background: rgb(200,235,255);
+              background: radial-gradient(circle, rgba(200,235,255,1) 35%, rgba(73,220,255,1) 100%);
+          }
           #no {
-              font-weight: bold;
               font-size: 48pt;
               display: none;
+              position: absolute;
+              top: 0;
+              left: 0;
+              margin: 200px 30% 0 30%;
+              padding: 10px;
+              color: red;
+              text-align: center;
+              background-color: black;
+              font-family: "Impacted", "Impact", serif;
           }
+          h1 {
+              margin: 100px 0 30px 0;
+              text-align: center;
+              color: #C6D;
+              font-family: "Lazy Spring Day", Helvetica, sans-serif;
+              font-size: 48pt;
+          }
+          .ui-icon.weather-icon {
+              background-size: 32px 32px;
+              width: 32px;
+              height: 32px;
+              padding-top: -8px;
+          }
+          .ui-menu .ui-menu-item .ui-menu-item-wrapper {
+              padding: 8px 10px 8px 48px;
+          }
+          .ui-selectmenu-button {
+              display: block;
+              margin: 0 auto;
+          }
+          p {
+              color: #C6D;
+              font-family: "Lazy Spring Day", Helvetica, sans-serif;
+              font-weight: bold;
+              text-align: center;
+          }
+          .preload {
+              height: 1px;
+              width: 1px;
+              top: -10px;
+              left: -10px;
+              position: absolute;
+          }
+
         </style>
     </head>
     <body>
-        <h1>the weather form</h1>
+        <img class="preload" src="clouds.jpg"/>
+        <h1>* The Weather Form *</h1>
         <p>What weather would you like?</p>
         <div>
         <select id="select">
             <option value="" disabled selected>Please select...</option>
-            <option>Hot and sunny</option>
-            <option>Warm with a few clouds</option>
-            <option>Snowing</option>
+            <option data-class="weather-icon" data-style="background-image: url(icons/sunny.svg)">Nice and sunny</option>
+            <option data-class="weather-icon" data-style="background-image: url(icons/sunny-clouds.svg)">Perfect spring day</option>
+            <option data-class="weather-icon" data-style="background-image: url(icons/snowing.svg)">Light and fluffy snow falling</option>
+            <option data-class="weather-icon" data-style="background-image: url(icons/rainbow.svg)">Sun shower with a beautiful rainbow</option>
         </select>
         </div>
 
         <div id="no">NO!<br/>ONLY COLD AND RAINY FOR YOU!</div>
     </body>
     <script type="text/javascript">
-        const select = document.getElementById("select");
-        select.onchange = function() {
-            document.getElementById("no").style.display = "block";
-            window.setTimeout(function() {
-                window.location.reload();
-            }, 5000);
-        };
+    $(function() {
+        $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+            _renderItem: function(ul, item) {
+                var li = $("<li>"),
+                wrapper = $("<div>", { text: item.label });
+
+                if (item.disabled) {
+                    li.addClass("ui-state-disabled");
+                }
+
+                $("<span>", {
+                    style: item.element.attr("data-style"),
+                    "class": "ui-icon " + item.element.attr("data-class")
+                }).appendTo(wrapper);
+
+                return li.append(wrapper).appendTo(ul);
+            }
+        });
+        
+        const select = $("#select")
+        select.iconselectmenu({
+          change: function( event, ui ) {
+              $("body").css("background-image", "url(clouds.jpg)");
+              $("#no").show();
+              //window.setTimeout(function() {
+              //  window.location.reload();
+              //}, 3000);
+          }
+        })
+          .iconselectmenu("menuWidget")
+          .addClass("ui-menu-icons weather-icon");
+        
+    });
     </script>
 </html>
